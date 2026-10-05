@@ -2,7 +2,7 @@ workflows:
   android-apk:
     name: VIP PhotoShoot APK
     max_build_duration: 30
-    instance_type: linux_x2
+    instance_type: mac_mini_m2
     environment:
       flutter: stable
     scripts:
@@ -18,8 +18,8 @@ workflows:
       - name: Set minSdk 23 (required by AdMob)
         script: |
           cd tmp_app
-          sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 23/' android/app/build.gradle* || true
-          sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 23/' android/app/build.gradle* || true
+          sed -i.bak 's/minSdk = flutter.minSdkVersion/minSdk = 23/' android/app/build.gradle* || true
+          sed -i.bak 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 23/' android/app/build.gradle* || true
       - name: Get packages, icon and splash
         script: |
           cd tmp_app
