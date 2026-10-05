@@ -1,0 +1,41 @@
+name: vip_photoshoot_library
+description: VIP PhotoShoot Library - native Android wrapper.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"   # needs Flutter 3.22 or newer
+
+dependencies:
+  flutter:
+    sdk: flutter
+  webview_flutter: ^4.10.0
+  google_mobile_ads: ^5.3.0
+  url_launcher: ^6.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.14.1
+  flutter_native_splash: ^2.4.2
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/logo.png
+
+# App icon (PLACEHOLDER: replace assets/icon.png with your own 1024x1024 PNG, then re-run the command)
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icon.png"
+  adaptive_icon_background: "#0D0610"
+  adaptive_icon_foreground: "assets/icon.png"
+
+# Native splash shown instantly while Flutter starts (no white flash)
+flutter_native_splash:
+  color: "#0D0610"
+  image: assets/logo.png
+  android_12:
+    color: "#0D0610"
+    image: assets/logo.png

@@ -1,0 +1,34 @@
+workflows:
+  android-apk:
+    name: VIP PhotoShoot APK
+    max_build_duration: 30
+    instance_type: linux_x2
+    environment:
+      flutter: stable
+    scripts:
+      - name: Create Android project shell and add our files
+        script: |
+          flutter create --org com.coachvip --project-name vip_photoshoot_library --platforms=android tmp_app
+          mkdir -p tmp_app/assets
+          rm -rf tmp_app/test
+          cp pubspec.yaml tmp_app/pubspec.yaml
+          cp main.dart tmp_app/lib/main.dart
+          cp logo.png icon.png tmp_app/assets/
+          cp AndroidManifest.xml tmp_app/android/app/src/main/AndroidManifest.xml
+      - name: Set minSdk 23 (required by AdMob)
+        script: |
+          cd tmp_app
+          sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 23/' android/app/build.gradle* || true
+          sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 23/' android/app/build.gradle* || true
+      - name: Get packages, icon and splash
+        script: |
+          cd tmp_app
+          flutter pub get
+          dart run flutter_launcher_icons
+          dart run flutter_native_splash:create
+      - name: Build APK
+        script: |
+          cd tmp_app
+          flutter build apk --release
+    artifacts:
+      - tmp_app/build/app/outputs/flutter-apk/*.apk
