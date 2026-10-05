@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -14,6 +14,10 @@ const String kAppName = 'VIP PhotoShoot Library';
 const String kSiteUrl = 'https://vip-photoshoot-library.netlify.app';
 const Color kBg = Color(0xFF0D0610);
 const Color kAccent = Color(0xFFFF8FC7);
+
+// DIAGNOSTIC SWITCH: false = ads completely OFF (use this to find out if ads cause a crash).
+// Set to true to turn the ads back on.
+const bool kEnableAds = false;
 
 // Set to false when you switch to your real AdMob IDs.
 const bool kUseTestAds = true; // REPLACE WITH YOUR REAL ADMOB ID (then set this to false)
@@ -34,7 +38,13 @@ const String kContactEmail = 'your-email@example.com'; // REPLACE WITH YOUR REAL
 // ───────────────────────── APP ─────────────────────────
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await MobileAds.instance.initialize();
+  if (kEnableAds) {
+    try {
+      await MobileAds.instance.initialize();
+    } catch (e) {
+      debugPrint('Ads init failed: $e');
+    }
+  }
   runApp(const VipApp());
 }
 
@@ -119,7 +129,7 @@ class _BannerSlotState extends State<BannerSlot> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_requested) return;
+    if (_requested || !kEnableAds) return;
     _requested = true;
     _load();
   }
@@ -204,7 +214,7 @@ class _WebHomeState extends State<WebHome> {
         onNavigationRequest: _handleNavigation,
       ));
     _setup();
-    _loadInterstitial();
+    if (kEnableAds) _loadInterstitial();
   }
 
   Future<void> _setup() async {
